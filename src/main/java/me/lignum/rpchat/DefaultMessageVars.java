@@ -4,6 +4,8 @@ import com.arckenver.nations.DataHandler;
 import com.arckenver.nations.object.Nation;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 class DefaultMessageVars {
     public static void init(RPChat c) {
@@ -16,6 +18,17 @@ class DefaultMessageVars {
         if (Sponge.getPluginManager().isLoaded("nations")) {
             c.registerMessageVar("nation", (p, r, m) -> {
                 Nation nation = DataHandler.getNationOfPlayer(p.getUniqueId());
+
+                if (nation != null) {
+                    return Text.of(nation.getName());
+                }
+
+                return Text.of("true");
+            });
+
+            c.registerMessageVar("nation_inside", (p, r, m) -> {
+                Location<World> loc = p.getLocation();
+                Nation nation = DataHandler.getNation(loc);
 
                 if (nation != null) {
                     return Text.of(nation.getName());
