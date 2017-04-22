@@ -18,22 +18,53 @@ public class MessageVarLookup extends StrLookup<String> {
     private final Player recipient;
     private final Text rawMessage;
 
-    private static final Pattern OPTION_PATTERN = Pattern.compile("^option:(.+)$");
+    private static final Pattern CONTROL_PATTERN = Pattern.compile("^(.+):(.*)$");
 
     @Override
     public String lookup(String key) {
-        Matcher matcher = OPTION_PATTERN.matcher(key);
+        Matcher matcher = CONTROL_PATTERN.matcher(key);
 
-        if (matcher.matches() && matcher.groupCount() > 0) {
-            String option = matcher.group(1);
-            String[] sides = option.split("\\|");
+        if (matcher.matches() && matcher.groupCount() > 1) {
+            String control = matcher.group(1);
+            String param = matcher.group(2);
 
-            Optional<String> value = player.getOption(sides[0]);
+            switch (control.toLowerCase()) {
+                case "option": {
+                    String[] sides = param.split("\\|", -1);
 
-            if (value.isPresent()) {
-                return value.get();
-            } else if (sides.length > 1) {
-                return sides[1];
+                    Optional<String> value = player.getOption(sides[0]);
+
+                    if (value.isPresent()) {
+                        return value.get();
+                    } else if (sides.length > 1) {
+                        return sides[1];
+                    }
+
+                    break;
+                }
+
+                case "permission":
+                    return String.valueOf(player.hasPermission(param));
+
+                case "if":
+                case "ifn": {
+                    String[] sides = param.split("\\|", -1);
+
+                    if (sides.length > 2) {
+                        String cond = sides[0];
+                        String ifTrue = sides[1];
+                        String ifFalse = sides[2];
+
+                        boolean c = cond.equalsIgnoreCase("true");
+
+                        if (control.equalsIgnoreCase("ifn"))
+                            c = !c;
+
+                        return c ? ifTrue : ifFalse;
+                    }
+
+                    break;
+                }
             }
         }
 

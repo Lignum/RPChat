@@ -46,6 +46,7 @@ public class ChatListener {
     private static Text createChatMessage(Player player, Player recipient, Text rawMessage) {
         String chatFormat = RPChat.get().getConfig().getChatFormat();
         StrSubstitutor sub = new StrSubstitutor(new MessageVarLookup(player, recipient, rawMessage));
+        sub.setEnableSubstitutionInVariables(true);
         return TextSerializers.FORMATTING_CODE.deserializeUnchecked(sub.replace(chatFormat));
     }
 
