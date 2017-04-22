@@ -6,10 +6,16 @@ group = 'me.lignum'
 version = '1.0-SNAPSHOT'
 description = 'An example plugin'
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
-    compile 'org.spongepowered:spongeapi:5.1.0'
+    compile "org.spongepowered:spongeapi:5.1.0"
     compile "org.projectlombok:lombok:1.16.12"
-    compile "org.apache.commons:commons-lang3:3.5"
+
+    // Plugin dependencies
+    compile "com.github.Arckenver:Nations:v2.4"
 }
 
 sponge {
