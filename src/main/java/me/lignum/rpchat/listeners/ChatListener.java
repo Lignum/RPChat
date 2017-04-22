@@ -73,12 +73,7 @@ public class ChatListener {
                 .filter(p -> canPlayerHearMessage(player, p))
                 .collect(Collectors.toList());
 
-            // Technically this is just recipients.size() - 1, but I can feel the weird edge cases in my soul.
-            long playersWhoCanHear = recipients.stream()
-                .filter(p -> !p.equals(player))
-                .count();
-
-            if (playersWhoCanHear <= 0) {
+            if (recipients.isEmpty()) {
                 player.sendMessage(Text.of(TextColors.RED, "Nobody heard you..."));
             } else {
                 for (Player p : recipients) {
