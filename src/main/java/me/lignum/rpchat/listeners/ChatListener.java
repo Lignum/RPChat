@@ -82,7 +82,9 @@ public class ChatListener {
                 .collect(Collectors.toList());
 
             if (recipients.isEmpty()) {
-                player.sendMessage(Text.of(TextColors.RED, "Nobody heard you..."));
+                if (RPChat.get().getConfig().getChatRange().isEnabled()) {
+                    player.sendMessage(Text.of(TextColors.RED, "Nobody heard you..."));
+                }
             } else {
                 for (Player p : recipients) {
                     p.sendMessage(createChatMessage(player, p, rawMessage));
