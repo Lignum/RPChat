@@ -10,7 +10,6 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.Text;
@@ -51,10 +50,9 @@ public class ChatListener {
         return TextSerializers.FORMATTING_CODE.deserializeUnchecked(sub.replace(chatFormat));
     }
 
-    @Listener(order = Order.FIRST)
+    @Listener
     public void onChatMessage(MessageChannelEvent.Chat event) {
         Cause cause = event.getCause();
-
         val optPlayer = cause.first(Player.class);
 
         if (optPlayer.isPresent()) {

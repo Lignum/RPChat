@@ -50,7 +50,7 @@ public class MessageVarLookup extends StrLookup<String> {
                 case "ifn": {
                     String[] sides = param.split("\\|", -1);
 
-                    if (sides.length > 2) {
+                    if (sides.length == 3) {
                         String cond = sides[0];
                         String ifTrue = sides[1];
                         String ifFalse = sides[2];
@@ -61,6 +61,35 @@ public class MessageVarLookup extends StrLookup<String> {
                             c = !c;
 
                         return c ? ifTrue : ifFalse;
+                    } else if (sides.length == 4) {
+                        String cond = sides[0];
+                        String comparison = sides[1];
+                        String ifTrue = sides[2];
+                        String ifFalse = sides[3];
+
+                        return cond.equalsIgnoreCase(comparison) ? ifTrue : ifFalse;
+                    } else if (sides.length >= 5) {
+                        String cond = sides[0];
+                        String operator = sides[1];
+                        String comparison = sides[2];
+                        String ifTrue = sides[3];
+                        String ifFalse = sides[4];
+
+                        try {
+                            int a = Integer.parseInt(cond);
+                            int b = Integer.parseInt(comparison);
+
+                            switch (operator) {
+                                case "<": return a < b ? ifTrue : ifFalse;
+                                case ">": return a > b ? ifTrue : ifFalse;
+                                case "<=": return a <= b ? ifTrue : ifFalse;
+                                case ">=": return a >= b ? ifTrue : ifFalse;
+                                case "==": return a == b ? ifTrue : ifFalse;
+                                default: break;
+                            }
+                        } catch (NumberFormatException e) {
+                            return "";
+                        }
                     }
 
                     break;
