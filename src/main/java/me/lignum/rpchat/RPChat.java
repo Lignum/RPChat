@@ -1,13 +1,14 @@
 package me.lignum.rpchat;
 
 import lombok.Getter;
-import lombok.Setter;
+import me.lignum.rpchat.commands.MuteCommand;
 import me.lignum.rpchat.config.Config;
 import me.lignum.rpchat.listeners.ChatListener;
 import me.lignum.rpchat.vars.MessageVar;
 import me.lignum.rpchat.vars.MessageVars;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -30,17 +31,11 @@ public class RPChat {
     }
 
     @Inject
-    @Getter
-    private Logger logger;
-
+    @Getter private Logger logger;
     @Getter private Config config;
 
-    @Getter
-    private List<Tuple<String, MessageVar>> messageVars = new LinkedList<>();
-
-    @Getter
-    @Setter
-    private MessageVar fallbackMessageVar;
+    @Getter private List<Tuple<String, MessageVar>> messageVars = new LinkedList<>();
+    @Getter private List<Player> mutedPlayers = new LinkedList<>();
 
     public void registerMessageVar(String name, MessageVar mvar) {
         messageVars.add(Tuple.of(name, mvar));
@@ -70,5 +65,7 @@ public class RPChat {
         MessageVars.initDefaults();
 
         Sponge.getEventManager().registerListeners(this, new ChatListener());
+        Sponge.getCommandManager().register(this, MuteCommand.MUTE_SPEC, "mute");
+        Sponge.getCommandManager().register(this, MuteCommand.UNMUTE_SPEC, "unmute");
     }
 }

@@ -61,6 +61,12 @@ public class ChatListener {
             event.setMessageCancelled(true);
 
             Player player = optPlayer.get();
+
+            if (RPChat.get().getMutedPlayers().contains(player)) {
+                player.sendMessage(Text.of(TextColors.RED, "You can't speak because you have been muted!"));
+                return;
+            }
+
             Text rawMessage = event.getRawMessage();
 
             // The player is always going to hear themselves, so we'll send their own message to them
